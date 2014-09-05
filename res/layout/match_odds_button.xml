@@ -1,0 +1,33 @@
+<TableLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/listrow"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="1dip"
+    >
+	<TableRow	
+	    android:id="@+id/btnOdds"
+	    android:layout_height="wrap_content"
+	    android:layout_width="match_parent"
+	    android:layout_margin="3dip"
+	    android:padding="3dip"
+	    android:background="@layout/match_btn_bg"
+	    android:onClick="onOddsBtnClick">    
+		<TextView
+		    android:id="@+id/oddsresult"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="@string/hello_world"   
+			android:layout_weight="1"
+		    />
+	
+		<TextView
+		    android:id="@+id/winback"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="@string/hello_world"   
+			android:layout_weight="1"
+			android:gravity="right"
+		    />
+	</TableRow>
+</TableLayout>

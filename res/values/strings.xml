@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">football</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="versus">VS</string>
+    <string name="match_result">Match Result</string>
+    <string name="correct_score">Correct Score</string>
+    <string name="handicap">Handicap</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_living">LivingActivity</string>
+    <string name="title_activity_match">MatchActivity</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_signup">SignupActivity</string>
+
+</resources>

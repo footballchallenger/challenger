@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+
+    <LinearLayout android:id="@+id/userbar" 
+        android:layout_height="wrap_content" 
+        android:layout_width="fill_parent" 
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="5dip"
+        android:background="#111"
+        android:orientation="horizontal">
+		<include layout="@layout/login_bar"/>
+    </LinearLayout>        
+    
+    <ListView  android:id="@+id/matchlist" 
+        android:layout_height="fill_parent" 
+        android:layout_width="fill_parent"
+        android:layout_above="@id/userbar"
+        android:background="#666666"/>
+    
+    <include layout="@layout/user_profile_panel"/>
+</RelativeLayout>
