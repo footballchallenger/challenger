@@ -8,7 +8,6 @@
         android:layout_height="wrap_content" 
         android:layout_width="fill_parent" 
         android:layout_alignParentBottom="true"
-        android:paddingLeft="5dip"
         android:background="#FFF"
         android:orientation="horizontal">
 		<include layout="@layout/login_bar"/>

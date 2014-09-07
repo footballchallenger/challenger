@@ -50,7 +50,7 @@ public class MatchActivity extends Activity {
 	HashMap<String, String> _pMatch = new HashMap<String, String>();
 	HashMap<String, String> _pUser = new HashMap<String, String>();
 	ArrayList<HashMap<String, String>> _pBetting = new ArrayList<HashMap<String, String>>();
-	private Context _context = this; 
+	private Context _context = this;  
 	
 	// Match Info
 	private int _nBetType = 0;

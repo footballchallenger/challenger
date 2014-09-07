@@ -37,7 +37,7 @@ public class LivingActivity extends Activity {
 	MatchAdapter _adapter;
 	HashMap<String, String> _pUser = new HashMap<String, String>();
 	
-	@Override
+	@Override 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_living);
