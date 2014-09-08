@@ -11,6 +11,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
@@ -66,7 +68,20 @@ public class MatchAdapter extends ArrayAdapter<HashMap<String, String>> implemen
 		        	df = new SimpleDateFormat("MM-dd");
 		        	szDate = df.format(date);
 		        	df = new SimpleDateFormat("HH:mm");
-		        	szTime = df.format(date);		        	
+		        	szTime = df.format(date);		
+		        	
+		        	//df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+		            //Date oldDate = df.parse(szFirstTime);
+		            //Date cDate = new Date(); 
+		            //Long timeDiff = cDate.getTime() - oldDate.getTime();
+		            //int day = (int) TimeUnit.MILLISECONDS.toDays(timeDiff);
+		            //int hh = (int) (TimeUnit.MILLISECONDS.toHours(timeDiff) - TimeUnit.DAYS.toHours(day));
+		            //int mm = (int) (TimeUnit.MILLISECONDS.toMinutes(timeDiff) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timeDiff)));
+		            //int a = (int) TimeUnit.MILLISECONDS.toMinutes(timeDiff);
+		            //int b = 1;
+		            //a = b;
+		            //b = a;
+		            
 		        } catch (ParseException e) {
 		        }
 		        
