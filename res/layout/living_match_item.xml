@@ -11,22 +11,23 @@
 	    android:layout_width="match_parent">
   
 	    <RelativeLayout
-			android:layout_width="60dip"
-			android:paddingLeft="5dip"
+			android:layout_width="55dip"
 			android:layout_height="match_parent"
+			android:paddingRight="10dip"
 			>
 		    <TextView
 		        android:id="@+id/date"
 		        android:textColor="#000"
 		        android:layout_width="match_parent"
 		        android:layout_height="match_parent"
+		        android:gravity="center"
 		        />
 		    <TextView
 		        android:visibility="invisible"
 		        android:id="@+id/liveimg"
 		        android:textColor="#000"
-		        android:layout_width="10dip"
-		        android:layout_height="10dip"
+		        android:layout_width="6dip"
+		        android:layout_height="6dip"
 		        android:layout_centerInParent="true"		        	        
 		        />				    
 	    </RelativeLayout>
@@ -49,8 +50,9 @@
 	    <TextView
 	        android:id="@+id/time"
 	        android:textColor="#000"
-	        android:layout_width="60dip"
-	        android:paddingLeft="5dip"/>
+	        android:layout_width="55dip"
+	        android:paddingRight="10dip"
+	        android:gravity="center"/>
 	    <TextView
 	        android:id="@+id/away"
 	        android:layout_width="0dip"

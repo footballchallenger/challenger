@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.deco.sql.BETTING;
+import com.deco.sql.USER;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -109,7 +110,7 @@ public class BettingModel extends MySQL{
     	return lsBettingData;
     }       
     
-    public ArrayList<HashMap<String, String>> getBettingByMatchId(String szMatchId){
+    public ArrayList<HashMap<String, String>> getBettingByMatchId(String szUserId, String szMatchId){
     	ArrayList<HashMap<String, String>> lsBettingData = new ArrayList<HashMap<String, String>>();
 
     	try {
@@ -125,7 +126,10 @@ public class BettingModel extends MySQL{
     		
         	SQLiteDatabase db = this.getReadableDatabase();
         	String szSelect = TextUtils.join(",", lsSelect);
-        	String szQuery = String.format("SELECT %s FROM %s WHERE %s=%s", szSelect, TABLE_NAME, BETTING.match_id, szMatchId);
+        	String szQuery = String.format("SELECT %s FROM %s WHERE %s=%s AND %s=%s", 
+        			szSelect, TABLE_NAME, 
+        			USER.id, szUserId,
+        			BETTING.match_id, szMatchId);
     	   	Cursor cursor = db.rawQuery(szQuery, null);  
     	   
     	   	if (cursor.moveToFirst()) {

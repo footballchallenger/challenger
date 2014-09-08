@@ -10,8 +10,7 @@
 	    android:layout_height="wrap_content"
 	    android:layout_width="match_parent"
 	    android:layout_margin="3dip"
-	    android:padding="3dip"
-	    android:background="@layout/match_btn_bg"
+	    android:background="@layout/style_button_odds"
 	    android:onClick="onOddsBtnClick">    
 		<TextView
 		    android:id="@+id/oddsresult"
