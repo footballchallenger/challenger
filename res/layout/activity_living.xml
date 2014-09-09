@@ -4,14 +4,14 @@
   android:layout_width="fill_parent"
   android:layout_height="fill_parent">
 
-    <LinearLayout android:id="@+id/userbar" 
+    <FrameLayout android:id="@+id/userbar" 
         android:layout_height="wrap_content" 
         android:layout_width="fill_parent" 
         android:layout_alignParentBottom="true"
         android:background="#FFF"
         android:orientation="horizontal">
 		<include layout="@layout/login_bar"/>
-    </LinearLayout>        
+    </FrameLayout>        
     
     <ListView  android:id="@+id/matchlist" 
         android:layout_height="fill_parent" 

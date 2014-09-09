@@ -1,15 +1,9 @@
 package com.deco.football;
 
-import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.deco.model.UserModel;
 import com.deco.service.UserService;
-import com.deco.sql.USER;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -23,8 +17,6 @@ import android.widget.TextView;
 
 public class LoginActivity extends Activity {
 	private Context _context = this;
-	private String _szPass = "";
-	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,62 +49,21 @@ public class LoginActivity extends Activity {
 		
 		TextView user = (TextView)findViewById(R.id.txtEmail);
 		TextView pass = (TextView)findViewById(R.id.txtPassword);
-		_szPass =  pass.getText().toString();
 		
 		svUser.login(user.getText().toString(), pass.getText().toString());
 	}
 	
 	class LoginWatcher implements Observer { 
 		public void update(Observable obj, Object arg) {
-			HashMap<String, String> result =  (HashMap<String, String>)arg;
+			ContentValues result =  (ContentValues)arg;
 			if (result.get("result")=="true"){
-				try {				
-					String szJson = result.get("data");
-					JSONObject objData = new JSONObject(szJson);
-					JSONObject objUser = objData.getJSONObject("user");
-					String szId 	  = objUser.getString(USER.id);
-					String szTeamId   = objUser.getString(USER.team_id);
-					String szEmail 	  = objUser.getString(USER.email);
-					String szName 	  = objUser.getString(USER.name);
-					String szBirthday = objUser.getString(USER.birthday);
-					String szCountry  = objUser.getString(USER.country);
-					String szToken    = objUser.getString(USER.token);
-					String szAvatar   = objUser.getString(USER.avatar);
-					String szRegTime  = objUser.getString(USER.reg_time);
-					String szCash 	  = objUser.getString(USER.cash);
-					
-					ContentValues values = new ContentValues();
-					values.put(USER.id, szId);
-					values.put(USER.team_id, szTeamId);
-					values.put(USER.email, szEmail);
-					values.put(USER.name, szName);
-					values.put(USER.pass, _szPass);					
-					values.put(USER.birthday, szBirthday);
-					values.put(USER.country, szCountry);
-					values.put(USER.token, szToken);
-					values.put(USER.avatar, szAvatar);
-					values.put(USER.reg_time, szRegTime);
-					values.put(USER.cash, szCash);
-					values.put(USER.logged, "1");
-					
-					UserModel mdlUser = new UserModel(_context);
-					mdlUser.upgrade();
-					String tmp = mdlUser.getUserById(szId);
-					if (tmp == ""){
-						mdlUser.insert(values);
-					}
-					else{
-						mdlUser.update(Integer.parseInt(tmp), values);
-					}
-					
-					Intent intent = new Intent(_context, LivingActivity.class);
-					startActivity(intent);
-					finish();
-				} catch (JSONException e) {
-				}					
+				Intent intent = new Intent();
+				intent.putExtra("update", "user"); 
+				setResult(RESULT_OK, intent);
+				finish();
 			}
 			else{
-				String szJson = result.get("msg");
+				String szJson = result.getAsString("msg");
 				TextView error = (TextView)findViewById(R.id.txtError);
 				error.setText(szJson);
 			}

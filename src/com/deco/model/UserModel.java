@@ -69,8 +69,8 @@ public class UserModel extends MySQL{
         create();  
     }
     
-    public HashMap<String, String> getLastUser(){
-    	HashMap<String, String> pUserData = new HashMap<String, String>();
+    public ContentValues getLastUser(){
+    	ContentValues pUserData = new ContentValues();
     	try {
     		ArrayList<String> lsSelect = new ArrayList<String>();
     		lsSelect.add(USER.id);

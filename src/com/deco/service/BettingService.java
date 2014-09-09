@@ -3,7 +3,6 @@ package com.deco.service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
 
@@ -21,6 +20,7 @@ import org.json.JSONObject;
 
 import com.deco.config.SERVER;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.os.AsyncTask;
 import org.json.JSONException;
@@ -40,10 +40,10 @@ public class BettingService extends Observable{
 		new BetTask().execute(values);
 	}
 	
-	class BetTask extends AsyncTask<String, String, HashMap<String, String>>{
+	class BetTask extends AsyncTask<String, String, ContentValues>{
 	    @Override
-	    protected HashMap<String, String> doInBackground(String... params) {
-	    	HashMap<String, String> result = new HashMap<String, String>();
+	    protected ContentValues doInBackground(String... params) {
+	    	ContentValues result = new ContentValues();
 	    	result.put("result", "false");
 	    	
 	        HttpClient httpclient = new DefaultHttpClient();
@@ -98,7 +98,7 @@ public class BettingService extends Observable{
 	    }
 	    
 	    @Override
-	    protected void onPostExecute(HashMap<String, String> result) {
+	    protected void onPostExecute(ContentValues result) {
 	        super.onPostExecute(result);
 			setChanged();
 			notifyObservers(result);	        

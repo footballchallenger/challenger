@@ -80,8 +80,8 @@ public class MatchModel extends MySQL{
 	   	return true;
     }    
     
-    public HashMap<String, String> getMatchById(String szId, ArrayList<String> lsSelect){
-    	HashMap<String, String> ret = new HashMap<String, String>();
+    public ContentValues getMatchById(String szId, ArrayList<String> lsSelect){
+    	ContentValues ret = new ContentValues();
     	
     	SQLiteDatabase db = this.getReadableDatabase();
     	String szSelect = TextUtils.join(",", lsSelect);
@@ -99,8 +99,8 @@ public class MatchModel extends MySQL{
 	   	return ret;
     }   
     
-    public ArrayList<HashMap<String, String>> getLiving(ArrayList<String> lsSelect){
-    	ArrayList<HashMap<String, String>> lsLivingMatch = new ArrayList<HashMap<String, String>>();
+    public ArrayList<ContentValues> getLiving(ArrayList<String> lsSelect){
+    	ArrayList<ContentValues> lsLivingMatch = new ArrayList<ContentValues>();
     	SQLiteDatabase db = this.getReadableDatabase();
     	
     	String szSelect = TextUtils.join(",", lsSelect);
@@ -109,7 +109,7 @@ public class MatchModel extends MySQL{
 	   	
         if (cursor.moveToFirst()) {
             do {
-            	HashMap<String, String> item = new HashMap<String, String>();
+            	ContentValues item = new ContentValues();
             	for (int i=0; i<lsSelect.size(); i++){
             		item.put(lsSelect.get(i), cursor.getString(i));
             	}
@@ -122,8 +122,8 @@ public class MatchModel extends MySQL{
     	return lsLivingMatch;
     }  
     
-    public HashMap<String, String> getMatchById(String szMatchId){
-    	HashMap<String, String> item = new HashMap<String, String>();
+    public ContentValues getMatchById(String szMatchId){
+    	ContentValues item = new ContentValues();
     	
     	SQLiteDatabase db = this.getReadableDatabase();
     	String szView = String.format(
@@ -161,8 +161,8 @@ public class MatchModel extends MySQL{
     	return item;
     }     
     
-    public ArrayList<HashMap<String, String>> getLiving(){
-    	ArrayList<HashMap<String, String>> lsLivingMatch = new ArrayList<HashMap<String, String>>();
+    public ArrayList<ContentValues> getLiving(){
+    	ArrayList<ContentValues> lsLivingMatch = new ArrayList<ContentValues>();
     	SQLiteDatabase db = this.getReadableDatabase();
     	
     	String szView = String.format(
@@ -178,7 +178,7 @@ public class MatchModel extends MySQL{
 	   	Cursor cursor = db.rawQuery(szQuery, null);
         if (cursor.moveToFirst()) {
             do {
-            	HashMap<String, String> item = new HashMap<String, String>();
+            	ContentValues item = new ContentValues();
             	int i = 0;
             	item.put(MATCH.id, cursor.getString(i++));
             	item.put(MATCH.league_id, cursor.getString(i++));

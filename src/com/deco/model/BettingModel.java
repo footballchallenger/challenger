@@ -73,8 +73,8 @@ public class BettingModel extends MySQL{
     	return super.update(TABLE_NAME, KEY_ID, nId, values);
     }
     
-    public ArrayList<HashMap<String, String>> getBettingByUserId(String szUserId){
-    	ArrayList<HashMap<String, String>> lsBettingData = new ArrayList<HashMap<String, String>>();
+    public ArrayList<ContentValues> getBettingByUserId(String szUserId){
+    	ArrayList<ContentValues> lsBettingData = new ArrayList<ContentValues>();
 
     	try {
     		ArrayList<String> lsSelect = new ArrayList<String>();
@@ -93,7 +93,7 @@ public class BettingModel extends MySQL{
     	   	Cursor cursor = db.rawQuery(szQuery, null);  
     	   
             do {
-            	HashMap<String, String> item = new HashMap<String, String>();
+            	ContentValues item = new ContentValues();
                	for (int i=0; i<lsSelect.size(); i++){
                		item.put(lsSelect.get(i), cursor.getString(i));
             	}
@@ -110,8 +110,8 @@ public class BettingModel extends MySQL{
     	return lsBettingData;
     }       
     
-    public ArrayList<HashMap<String, String>> getBettingByMatchId(String szUserId, String szMatchId){
-    	ArrayList<HashMap<String, String>> lsBettingData = new ArrayList<HashMap<String, String>>();
+    public ArrayList<ContentValues> getBettingByMatchId(String szUserId, String szMatchId){
+    	ArrayList<ContentValues> lsBettingData = new ArrayList<ContentValues>();
 
     	try {
     		ArrayList<String> lsSelect = new ArrayList<String>();
@@ -134,7 +134,7 @@ public class BettingModel extends MySQL{
     	   
     	   	if (cursor.moveToFirst()) {
 	            do {
-	            	HashMap<String, String> item = new HashMap<String, String>();
+	            	ContentValues item = new ContentValues();
 	               	for (int i=0; i<lsSelect.size(); i++){
 	               		item.put(lsSelect.get(i), cursor.getString(i));
 	            	}
@@ -152,8 +152,8 @@ public class BettingModel extends MySQL{
     	return lsBettingData;
     }        
     
-    public HashMap<String, String> getBettingById(String szId){
-    	HashMap<String, String> pBettingData = new HashMap<String, String>();
+    public ContentValues getBettingById(String szId){
+    	ContentValues pBettingData = new ContentValues();
     	try {
     		ArrayList<String> lsSelect = new ArrayList<String>();
     		lsSelect.add(BETTING.id);

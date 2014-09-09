@@ -13,6 +13,7 @@
 	    android:layout_height="wrap_content"
 	    android:background="#F5F3BA">
 		<TextView
+		    android:id="@+id/btnCloseProfile"
 		    android:layout_width="30dip"
 		    android:layout_height="wrap_content"
 	        android:text="X"
@@ -20,8 +21,6 @@
 		    android:textColor="#000"
 		    android:textSize="30sp"
 		    android:textStyle="bold"	
-			android:clickable="true"
-	        android:onClick="onCloseBtnClick"	
 	        />
 		<TextView
 		    android:layout_width="match_parent"
@@ -40,7 +39,8 @@
 	    android:orientation="vertical">
 		
 		<Button
-		    android:background="@layout/style_button_light"
+		    android:id="@+id/btnSignOut"
+		    android:background="@drawable/style_button_light"
 		    android:layout_marginTop="10dip"
 		    android:padding="8dip"
 		    android:layout_width="match_parent"
@@ -50,8 +50,6 @@
 		    android:gravity="center"
 		    android:textSize="18sp"
 		    android:textStyle="bold"
-		    android:clickable="true"
-	        android:onClick="onLogoutBtnClick"		    
 		    />			
 	</LinearLayout>
 </LinearLayout>

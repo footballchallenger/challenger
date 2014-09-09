@@ -74,8 +74,8 @@ public class TeamModel extends MySQL{
     	return super.update(TABLE_NAME, KEY_ID, nId, values);
     }  
     
-    public HashMap<String, String> getTeamById(String szId, ArrayList<String> lsSelect){
-    	HashMap<String, String> ret = new HashMap<String, String>();
+    public ContentValues getTeamById(String szId, ArrayList<String> lsSelect){
+    	ContentValues ret = new ContentValues();
     	
     	SQLiteDatabase db = this.getReadableDatabase();
     	String szSelect = TextUtils.join(",", lsSelect);

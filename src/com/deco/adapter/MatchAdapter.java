@@ -1,6 +1,7 @@
 package com.deco.adapter;
 
 
+import com.deco.football.LivingActivity;
 import com.deco.football.MatchActivity;
 import com.deco.football.R;
 import com.deco.model.LeagueModel;
@@ -10,13 +11,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -28,15 +27,15 @@ import android.widget.ArrayAdapter;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
-public class MatchAdapter extends ArrayAdapter<HashMap<String, String>> implements OnClickListener{
-	public ArrayList<HashMap<String, String>> lsMatch;
+public class MatchAdapter extends ArrayAdapter<ContentValues> implements OnClickListener{
+	public ArrayList<ContentValues> lsMatch;
 	private LayoutInflater mInflater;
-	Context _Context;
+	Context _context;
 	
 	
-	public MatchAdapter(Context context, int textViewResourceId, ArrayList<HashMap<String, String>> objects) {
+	public MatchAdapter(Context context, int textViewResourceId, ArrayList<ContentValues> objects) {
 		super(context, textViewResourceId, objects);
-		_Context = context;
+		_context = context;
 		this.lsMatch = objects;
 		mInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
@@ -46,7 +45,7 @@ public class MatchAdapter extends ArrayAdapter<HashMap<String, String>> implemen
 			return mInflater.inflate(R.layout.living_league_item, null);
 		}
 		
-		HashMap<String, String> matchinfo = lsMatch.get(position);
+		ContentValues matchinfo = lsMatch.get(position);
 		if (matchinfo != null) {
 			String szMatchId = (String)matchinfo.get(MATCH.id);
 			if (szMatchId != ""){
@@ -113,7 +112,7 @@ public class MatchAdapter extends ArrayAdapter<HashMap<String, String>> implemen
 		    		matchholder = (MatchHolder) v.getTag();
 		    	}
 		    	
-		    	matchholder.match_id = Integer.parseInt(matchinfo.get(MATCH.id));
+		    	matchholder.match_id = matchinfo.getAsInteger(MATCH.id);
 				matchholder.time.setText(szTime);
 				matchholder.date.setText(szDate);
 				matchholder.home.setText(szHomeName);
@@ -154,7 +153,7 @@ public class MatchAdapter extends ArrayAdapter<HashMap<String, String>> implemen
 		    	}
 		    	
 		    	String szLeagueId = (String)matchinfo.get("league_id");
-		    	LeagueModel mdlLeague = new LeagueModel(_Context);
+		    	LeagueModel mdlLeague = new LeagueModel(_context);
 		    	String szLeagueName = mdlLeague.getLeagueById(szLeagueId);		    	
 		    	leagueholder.league_name.setText(szLeagueName);
 			}
@@ -171,9 +170,10 @@ public class MatchAdapter extends ArrayAdapter<HashMap<String, String>> implemen
 			return;
 		
 		MatchHolder holder = (MatchHolder)v.getTag();
-		Intent intent = new Intent(_Context, MatchActivity.class);
-		intent.putExtra("matchid", Integer.toString(holder.match_id));	
-		_Context.startActivity(intent);		
+		Intent intent = new Intent(_context, MatchActivity.class);
+		intent.putExtra("matchid", Integer.toString(holder.match_id));
+		LivingActivity activity = (LivingActivity)_context;
+		activity.startActivityForResult(intent, 1);	
 	}    
 	
     static class MatchHolder{

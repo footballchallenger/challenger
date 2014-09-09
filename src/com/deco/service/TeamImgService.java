@@ -1,26 +1,18 @@
 package com.deco.service;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Observable;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import com.deco.model.TeamModel;
 import com.deco.sql.TEAM;
+
+import android.content.ContentValues;
 import android.content.Context;
 import android.os.AsyncTask;
 
@@ -36,10 +28,10 @@ public class TeamImgService extends Observable{
 		new RequestTask().execute(szTeamID);
 	}
 	
-	class RequestTask extends AsyncTask<String, String, HashMap<String, String>>{
+	class RequestTask extends AsyncTask<String, String, ContentValues>{
 	    @Override
-	    protected HashMap<String, String> doInBackground(String... params) {
-	    	HashMap<String, String> ret = new HashMap<String, String>();
+	    protected ContentValues doInBackground(String... params) {
+	    	ContentValues ret = new ContentValues();
 	    	String szTeamID = params[0];
 	    	String szFilePath = "team" + szTeamID + ".png";
 	        InputStream inputStream = null;
@@ -55,8 +47,8 @@ public class TeamImgService extends Observable{
 	        TeamModel mdlTeam = new TeamModel(_context);
 	        ArrayList<String> lsSelect = new ArrayList<String>();
 	        lsSelect.add(TEAM.avatar);
-	        HashMap<String, String> pTeamInfo = mdlTeam.getTeamById(szTeamID, lsSelect);
-	        String szAvatarUrl = pTeamInfo.get(TEAM.avatar); 
+	        ContentValues pTeamInfo = mdlTeam.getTeamById(szTeamID, lsSelect);
+	        String szAvatarUrl = pTeamInfo.getAsString(TEAM.avatar); 
 	        if (szAvatarUrl == ""){
 	        	ret.put("result", "false");
 	        	return ret;
@@ -99,7 +91,7 @@ public class TeamImgService extends Observable{
    
 	    
 	    @Override
-	    protected void onPostExecute(HashMap<String, String> result) {
+	    protected void onPostExecute(ContentValues result) {
 	        super.onPostExecute(result);
 			setChanged();
 			notifyObservers(result);	        

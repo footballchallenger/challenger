@@ -3,7 +3,6 @@ package com.deco.service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Observable;
 
 import org.apache.http.HttpResponse;
@@ -98,7 +97,7 @@ public class MatchService extends Observable{
 					lsSelect.add(MATCH.home_back);
 					lsSelect.add(MATCH.away_back);
 					
-					HashMap<String, String> rsMatch = mdlMatch.getMatchById(match_id, lsSelect);
+					ContentValues rsMatch = mdlMatch.getMatchById(match_id, lsSelect);
 					
 					if (rsMatch.size() == 0){
 						values.put(MATCH.id, match_id);
@@ -115,31 +114,31 @@ public class MatchService extends Observable{
 						_bUpdate = true;
 					}
 					else{
-						int nStatus = Integer.parseInt(rsMatch.get(MATCH.status));
+						int nStatus = rsMatch.getAsInteger(MATCH.status);
 						if (nStatus < 5){
-							if (checkDataChanged(getObjValue(match, MATCH.home_goals),  rsMatch.get(MATCH.home_goals)))
+							if (checkDataChanged(getObjValue(match, MATCH.home_goals),  rsMatch.getAsString(MATCH.home_goals)))
 								values.put(MATCH.home_goals, getObjValue(match, MATCH.home_goals));
 
-							if (checkDataChanged(getObjValue(match, MATCH.away_goals),  rsMatch.get(MATCH.away_goals)))
+							if (checkDataChanged(getObjValue(match, MATCH.away_goals),  rsMatch.getAsString(MATCH.away_goals)))
 								values.put(MATCH.away_goals, getObjValue(match, MATCH.away_goals));
 
-							if (checkDataChanged(getObjValue(match, MATCH.first_result),  rsMatch.get(MATCH.first_result)))
+							if (checkDataChanged(getObjValue(match, MATCH.first_result),  rsMatch.getAsString(MATCH.first_result)))
 								values.put(MATCH.first_result, getObjValue(match, MATCH.first_result));
 				
-							if (checkDataChanged(getObjValue(match, MATCH.second_time),  rsMatch.get(MATCH.second_time)))
+							if (checkDataChanged(getObjValue(match, MATCH.second_time),  rsMatch.getAsString(MATCH.second_time)))
 								values.put(MATCH.second_time, getObjValue(match, MATCH.second_time));
 							
-							if (checkDataChanged(getObjValue(match, MATCH.status),  rsMatch.get(MATCH.status)))
+							if (checkDataChanged(getObjValue(match, MATCH.status),  rsMatch.getAsString(MATCH.status)))
 								values.put(MATCH.status, getObjValue(match, MATCH.status));							
 						}
 						else if (nStatus == 17){
-							if (checkDataChanged(getObjValue(match, MATCH.handicap),  rsMatch.get(MATCH.handicap))){
+							if (checkDataChanged(getObjValue(match, MATCH.handicap),  rsMatch.getAsString(MATCH.handicap))){
 								values.put(MATCH.handicap, getObjValue(match, MATCH.handicap));
 								values.put(MATCH.home_back, getObjValue(match, MATCH.home_back));
 								values.put(MATCH.away_back, getObjValue(match, MATCH.away_back));
 							}
 							
-							if (checkDataChanged(getObjValue(match, MATCH.status),  rsMatch.get(MATCH.status)))
+							if (checkDataChanged(getObjValue(match, MATCH.status),  rsMatch.getAsString(MATCH.status)))
 								values.put(MATCH.status, getObjValue(match, MATCH.status));								
 						} 
 						
