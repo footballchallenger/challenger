@@ -19,5 +19,9 @@
         android:layout_above="@id/userbar"
         android:background="#FFF"/>
     
-    <include layout="@layout/user_profile_panel"/>
+    <include 
+        android:id="@+id/userprofile"
+        android:visibility="invisible"
+        layout="@layout/user_profile_panel"/>
+
 </RelativeLayout>

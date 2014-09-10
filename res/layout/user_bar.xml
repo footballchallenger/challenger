@@ -1,7 +1,4 @@
- 	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
- 	    android:layout_height="wrap_content" 
-        android:layout_width="match_parent" >
- 		<LinearLayout 
+ 		<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 			android:layout_height="wrap_content" 
         	android:layout_width="match_parent" 
         	android:gravity="center_vertical"
@@ -17,7 +14,7 @@
 		    <LinearLayout
 		        android:id="@+id/btnProfile"
 		        android:layout_width="0dip"
-		        android:layout_weight="0.8"
+		        android:layout_weight="1"
 		        android:layout_height="match_parent"
 		        android:orientation="vertical"
 		        android:gravity="center_vertical">
@@ -63,15 +60,25 @@
 			        android:textColor="#000"
 			        android:textStyle="italic"
 			        android:textSize="13sp"/>
-		    </LinearLayout>	    
+		    </LinearLayout>	 
+		    
+		    <RelativeLayout
+		        android:id="@+id/btnShowBetting"
+		        android:layout_height="50dip" 
+		        android:layout_width="50dip" 
+		        android:background="@drawable/betting_round"
+		        android:orientation="horizontal"
+		        android:gravity="center_vertical"
+		        android:scaleType="fitCenter" >
+			    <TextView 
+			        android:id="@+id/txtBettingCount"
+			        android:layout_height="match_parent"
+			        android:layout_width="match_parent"
+			        android:text="100"
+			        android:gravity="center"
+			        android:textStyle="bold"
+			        android:textColor="#FFF"
+			        android:textSize="18sp">
+			        </TextView>
+		    </RelativeLayout>  		    
 		</LinearLayout>
-		
-	    <LinearLayout
-	        android:id="@+id/btnShowBetting"
-	        android:layout_height="wrap_content" 
-	        android:layout_width="wrap_content" 
-	        android:layout_alignParentRight="true"
-	        android:background="@drawable/ic_launcher"
-	        android:orientation="horizontal">
-	    </LinearLayout>    		
-	</RelativeLayout>

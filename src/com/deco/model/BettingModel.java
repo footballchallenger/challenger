@@ -184,4 +184,27 @@ public class BettingModel extends MySQL{
 	    }
     	return pBettingData;
     }
+    
+    public int getBettingCount(String szUserId){
+    	try {
+        	SQLiteDatabase db = this.getReadableDatabase();
+        	String szQuery = String.format("SELECT COUNT(%s) FROM %s WHERE %s=%s", BETTING.id, TABLE_NAME, USER.id, szUserId);
+    	   	Cursor cursor = db.rawQuery(szQuery, null);  
+    	   
+    	   	if (cursor.moveToFirst()){
+    	   		int nRet = cursor.getInt(0);
+            	cursor.close();
+            	db.close();    	   		
+    	   		return nRet;
+    	   	}
+    	   	
+        	cursor.close();
+        	db.close();
+	        
+	        return 0;
+	    } catch (SQLException e) {
+	    	upgrade();
+	    	return 0;
+	    }
+    }
 }

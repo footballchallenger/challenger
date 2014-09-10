@@ -168,6 +168,9 @@
         />
     
     
-    <include layout="@layout/user_profile_panel"/>
+    <include 
+        android:id="@+id/userprofile"
+        android:visibility="invisible"
+        layout="@layout/user_profile_panel"/>
     
 </RelativeLayout>

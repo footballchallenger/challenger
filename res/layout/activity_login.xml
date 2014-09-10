@@ -73,7 +73,7 @@
 		    />				    	
 		<Button
 		    android:id="@+id/btnLogin"
-		    android:background="@drawable/style_button_light"
+		    android:background="@drawable/style_button_clickable"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:text="LOG IN"
