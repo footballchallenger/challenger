@@ -7,14 +7,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.deco.adapter.MatchAdapter;
-import com.deco.fragment.BottomBar;
+import com.deco.element.BottomBar;
 import com.deco.model.MatchModel;
 import com.deco.service.MatchService;
 import com.deco.sql.MATCH;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,6 +26,7 @@ public class LivingActivity extends Activity {
 	final Handler myHandler = new Handler();
 	MatchAdapter _adapter;
 	ContentValues _pUser = new ContentValues();
+	BottomBar _userBar = new BottomBar(this);
 	
 	@Override 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +34,8 @@ public class LivingActivity extends Activity {
 		setContentView(R.layout.activity_living);
 		
 		// Get Current User
-		updateUserBar();
+		BottomBar bar = new BottomBar(this);
+		bar.updateBottomBar();
 		
 		// ListView Match
 		ArrayList<ContentValues> lsMatch = new ArrayList<ContentValues>();
@@ -52,12 +52,6 @@ public class LivingActivity extends Activity {
 		myTimer = new Timer();
 		ComingMatchTimer getComingMatchTimer = new ComingMatchTimer();
 		myTimer.schedule(getComingMatchTimer, 2000, 60000);		
-	}
-	
-	public void updateUserBar()	{
-		Fragment frag = new BottomBar(this);
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.userbar, frag).commit();
 	}
 	
 	@Override
@@ -105,7 +99,8 @@ public class LivingActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    if (requestCode == 1) {
 	        if(resultCode == RESULT_OK){
-	        	updateUserBar();  	
+	    		BottomBar bar = new BottomBar(this);
+	    		bar.updateBottomBar();
 	        } 
 	        if (resultCode == RESULT_CANCELED) {
 

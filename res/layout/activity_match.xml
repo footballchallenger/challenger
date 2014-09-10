@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainid"
@@ -6,14 +7,14 @@
     android:background="#EEE"
     tools:context="com.deco.football.MatchActivity" >
     
-    <FrameLayout android:id="@+id/userbar" 
+    <LinearLayout android:id="@+id/userbar" 
         android:layout_height="wrap_content" 
         android:layout_width="fill_parent" 
         android:layout_alignParentBottom="true"
         android:background="#FFF"
         android:orientation="horizontal">
-		<include layout="@layout/login_bar"/>
-    </FrameLayout>   
+		<include layout="@layout/user_login_bar"/>
+    </LinearLayout>   
     
     <LinearLayout
         android:id="@+id/matchinfo"

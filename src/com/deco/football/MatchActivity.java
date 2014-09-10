@@ -14,8 +14,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -37,7 +35,7 @@ import android.widget.ScrollView;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.deco.fragment.BottomBar;
+import com.deco.element.BottomBar;
 import com.deco.helper.Helper;
 import com.deco.model.BettingModel;
 import com.deco.model.MatchModel;
@@ -49,31 +47,37 @@ import com.deco.sql.MATCH;
 import com.deco.sql.USER;
 
 public class MatchActivity extends Activity {
-	ContentValues _pMatch = new ContentValues();
-	ContentValues _pUser = new ContentValues();
-	ArrayList<ContentValues> _pBetting = new ArrayList<ContentValues>();
-	private Context _context = this;  
 	
+	// Data From SQLite
+	ContentValues 				_pMatch = new ContentValues();
+	ContentValues 				_pUser = new ContentValues();
+	ArrayList<ContentValues> 	_pBetting = new ArrayList<ContentValues>();
+	  
 	// Bet Info
-	private int _nBetType = 0;
-	private int _nBetTeam = 0;
-	private int _nHomeGoals = 0;
-	private int _nAwayGoals = 0;
-	private int _nHandicap = 0;
-	private int _nHomeback = 0;
-	private int _nAwayback = 0;	
+	private int 	_nBetType = 0;
+	private int 	_nBetTeam = 0;
+	private int 	_nHomeGoals = 0;
+	private int 	_nAwayGoals = 0;
+	private int 	_nHandicap = 0;
+	private int 	_nHomeback = 0;
+	private int 	_nAwayback = 0;
+	private String 	_szOddTitle = "";
 	
 	// Correct Score Panel
 	View _vMatchResultPanel;
 	View _vCorrectPanel;
 	View _vHandicapPanel;
 	
+	// Variable
+	private Context _context = this;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_match);
 		
-		updateUserBar();
+		BottomBar bar = new BottomBar(this);
+		bar.updateBottomBar();
 		
 	    Intent intent = getIntent();
 	    String szMatchId = intent.getStringExtra("matchid");
@@ -143,11 +147,17 @@ public class MatchActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	public void updateUserBar()	{
-		Fragment frag = new BottomBar(this);
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.userbar, frag).commit();
-	}	
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    if (requestCode == 1) {
+	        if(resultCode == RESULT_OK){
+	    		BottomBar bar = new BottomBar(this);
+	    		bar.updateBottomBar();
+	        } 
+	        if (resultCode == RESULT_CANCELED) {
+
+	        } 
+	    } 
+	} 	
 	
 	public void setTimeToGui(String szFirstTime)
 	{
@@ -210,17 +220,15 @@ public class MatchActivity extends Activity {
 		if (Integer.parseInt(szCash) < 1){
 			return;
 		}
-		
 		String szType = betTypes[_nBetType];
 		String szBetTo = betTeam[_nBetTeam];
 		
-		String szOddsTitle = "";
 		if (szType.equals("c"))
-			szOddsTitle = szType + "_" + szCorrectScore;
+			_szOddTitle = szType + "_" + szCorrectScore;
 		else 
-			szOddsTitle = szType + "_" + szBetTo;
+			_szOddTitle = szType + "_" + szBetTo;
 		
-		svBetting.bet(szUserId, szToken, szMatchId, szCash, szOddsTitle);
+		svBetting.bet(szUserId, szToken, szMatchId, szCash, _szOddTitle);
 	}
 	
 	public void onMoreCashBtnClick(View view){
@@ -329,7 +337,7 @@ public class MatchActivity extends Activity {
 		}
 		
 		TextView curTab = (TextView)view;
-		curTab.setTextColor(Color.parseColor("#000000"));
+		curTab.setTextColor(Color.BLACK);
 		curTab.setTypeface(null, Typeface.BOLD);
 		String tag = (String)curTab.getTag();
 		
@@ -378,7 +386,6 @@ public class MatchActivity extends Activity {
 		btnOdds.setId(2);
 		column2.addView(wrapper);			
 				
-		
 		wrapper = LayoutInflater.from(this).inflate(R.layout.match_odds_button, null);
 		oddsresult = (TextView)wrapper.findViewById(R.id.oddsresult);
 		btnOdds = (TableRow)wrapper.findViewById(R.id.btnOdds);
@@ -589,9 +596,6 @@ public class MatchActivity extends Activity {
 					JSONObject objData = new JSONObject(szJson);
 					String szId 	  = objData.getString(BETTING.id); 					
 					
-					String[] betTypes = new String[] {"m", "c", "h"};
-					String[] betTeam = new String[] {"h", "a", "d"};
-					String szCorrectScore = String.format("%d-%d", _nHomeGoals, _nAwayGoals);
 					String szUserId = _pUser.getAsString(USER.id);
 					String szMatchId = _pMatch.getAsString(MATCH.id);
 					TextView txtPlace = (TextView)findViewById(R.id.txtPlace);
@@ -599,14 +603,6 @@ public class MatchActivity extends Activity {
 					if (Integer.parseInt(szCash) < 1){
 						return;
 					}
-					
-					String szType = betTypes[_nBetType];
-					String szBetTo = betTeam[_nBetTeam];
-					String szOddsTitle = "";
-					if (_nBetType == 1)
-						szOddsTitle = szType + "_" + szCorrectScore;
-					else 
-						szOddsTitle = szType + "_" + szBetTo;
 					
 					Calendar c = Calendar.getInstance();
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
@@ -616,7 +612,7 @@ public class MatchActivity extends Activity {
 					values.put(BETTING.id, szId);
 					values.put(BETTING.user_id, szUserId);
 					values.put(BETTING.match_id, szMatchId);
-					values.put(BETTING.odds_title, szOddsTitle);
+					values.put(BETTING.odds_title, _szOddTitle);
 					values.put(BETTING.cash, szCash);					
 					values.put(BETTING.get, 0);
 					values.put(BETTING.status, 0);
@@ -645,12 +641,13 @@ public class MatchActivity extends Activity {
 					returnIntent.putExtra("update", "user"); 
 					setResult(RESULT_OK, returnIntent);
 					
-					updateUserBar();
+					BottomBar bar = new BottomBar(_context);
+					bar.updateBottomBar();
 				} catch (JSONException e) {
 				}					
 			}
 			else{
-				String szJson = result.getAsString("msg");
+				//String szJson = result.getAsString("msg");
 			}
 			
 			TextView btnLogin = (TextView)findViewById(R.id.btnConfirm);

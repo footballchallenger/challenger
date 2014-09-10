@@ -1,4 +1,7 @@
- 		<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ 	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ 	    android:layout_height="wrap_content" 
+        android:layout_width="match_parent" >
+ 		<LinearLayout 
 			android:layout_height="wrap_content" 
         	android:layout_width="match_parent" 
         	android:gravity="center_vertical"
@@ -62,3 +65,13 @@
 			        android:textSize="13sp"/>
 		    </LinearLayout>	    
 		</LinearLayout>
+		
+	    <LinearLayout
+	        android:id="@+id/btnShowBetting"
+	        android:layout_height="wrap_content" 
+	        android:layout_width="wrap_content" 
+	        android:layout_alignParentRight="true"
+	        android:background="@drawable/ic_launcher"
+	        android:orientation="horizontal">
+	    </LinearLayout>    		
+	</RelativeLayout>
