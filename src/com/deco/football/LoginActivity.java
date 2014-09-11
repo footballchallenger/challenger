@@ -3,6 +3,7 @@ package com.deco.football;
 import java.util.Observable;
 import java.util.Observer;
 
+import com.deco.element.BottomBar;
 import com.deco.service.UserService;
 
 import android.app.Activity;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 public class LoginActivity extends Activity {
 	private Context _context = this;
+	private BottomBar _botBar = new BottomBar(this);
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +59,8 @@ public class LoginActivity extends Activity {
 		public void update(Observable obj, Object arg) {
 			ContentValues result =  (ContentValues)arg;
 			if (result.get("result")=="true"){
-				Intent intent = new Intent();
-				intent.putExtra("update", "user"); 
-				setResult(RESULT_OK, intent);
+				_botBar.updateUserData();
+				_botBar.updateBettingCount();
 				finish();
 			}
 			else{

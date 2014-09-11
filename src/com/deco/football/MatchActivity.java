@@ -16,7 +16,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
+import android.content.Intent; 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -50,7 +50,6 @@ public class MatchActivity extends Activity {
 	
 	// Data From SQLite
 	ContentValues 				_pMatch = new ContentValues();
-	ContentValues 				_pUser = new ContentValues();
 	ArrayList<ContentValues> 	_pBetting = new ArrayList<ContentValues>();
 	  
 	// Bet Info
@@ -69,15 +68,15 @@ public class MatchActivity extends Activity {
 	View _vHandicapPanel;
 	
 	// Variable
-	private Context _context = this;
+	private Context 	_context = this;
+	private BottomBar 	_botBar = new BottomBar(this);
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_match);
 		
-		BottomBar bar = new BottomBar(this);
-		bar.updateBottomBar();
+		_botBar.updateBottomBar();
 		
 	    Intent intent = getIntent();
 	    String szMatchId = intent.getStringExtra("matchid");
@@ -85,15 +84,11 @@ public class MatchActivity extends Activity {
 	    // Get Match Info From Database
 	    MatchModel mdlModel = new MatchModel(this);
 	    _pMatch = mdlModel.getMatchById(szMatchId);
-	    
-		// Get User From Database
-		UserModel mdlUser = new UserModel(this);
-		_pUser = mdlUser.getLastUser();
-		
+
 		// Get Betting From Database
-		if (_pUser.size() > 0){
+		if (_botBar.getUser().size() > 0){
 			BettingModel mdlBetting = new BettingModel(this);
-			_pBetting = mdlBetting.getBettingByMatchId(_pUser.getAsString(USER.id), szMatchId);
+			_pBetting = mdlBetting.getBettingByMatchId(_botBar.getUser().getAsString(USER.id), szMatchId);
 		}
 		
 	    String tmp = _pMatch.getAsString(MATCH.handicap);
@@ -104,7 +99,7 @@ public class MatchActivity extends Activity {
 			_vCorrectPanel = LayoutInflater.from(this).inflate(R.layout.match_odds_panel, null);
 			_vMatchResultPanel = LayoutInflater.from(this).inflate(R.layout.match_odds_panel, null);
 			_vHandicapPanel = LayoutInflater.from(this).inflate(R.layout.match_odds_panel, null);
-			initOddsPanel();
+			initOddsPanel(); 
 			setMatchResultOdds();
 	    }		
 		
@@ -147,17 +142,16 @@ public class MatchActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    if (requestCode == 1) {
-	        if(resultCode == RESULT_OK){
-	    		BottomBar bar = new BottomBar(this);
-	    		bar.updateBottomBar();
-	        } 
-	        if (resultCode == RESULT_CANCELED) {
-
-	        } 
-	    } 
-	} 	
+	@Override
+	protected void onResume() {
+	  _botBar.updateBottomBar();
+	  super.onResume();
+	}	
+	
+	@Override
+	protected void onPause() {
+	  super.onPause();
+	}	
 	
 	public void setTimeToGui(String szFirstTime)
 	{
@@ -212,8 +206,8 @@ public class MatchActivity extends Activity {
 		String[] betTypes = new String[] {"m", "c", "h"};
 		String[] betTeam = new String[] {"h", "a", "d"};
 		String szCorrectScore = String.format(Locale.US, "%d-%d", _nHomeGoals, _nAwayGoals);
-		String szUserId = _pUser.getAsString(USER.id);
-		String szToken = _pUser.getAsString(USER.token);
+		String szUserId = _botBar.getUser().getAsString(USER.id);
+		String szToken = _botBar.getUser().getAsString(USER.token);
 		String szMatchId = _pMatch.getAsString(MATCH.id);
 		TextView txtPlace = (TextView)findViewById(R.id.txtPlace);
 		String szCash = txtPlace.getText().toString();
@@ -276,13 +270,13 @@ public class MatchActivity extends Activity {
     	TextView txtGetBack = (TextView)findViewById(R.id.txtGetBack);
     	TextView txtPlace = (TextView)findViewById(R.id.txtPlace);
     	
-    	txtYourCash.setText(_pUser.getAsString(USER.cash));
+    	txtYourCash.setText(_botBar.getUser().getAsString(USER.cash));
     	txtGetBack.setText("0");
     	txtPlace.setText("0");		
 	}
 	
     public void onOddsBtnClick(View view){
-    	if (_pUser.size() < 1)
+    	if (_botBar.getUser().size() < 1)
     		return;
     	
     	LinearLayout panel = (LinearLayout)findViewById(R.id.betpanel);
@@ -297,7 +291,7 @@ public class MatchActivity extends Activity {
     	TextView txtGetBack = (TextView)findViewById(R.id.txtGetBack);
     	TextView txtPlace = (TextView)findViewById(R.id.txtPlace);
     	
-    	txtYourCash.setText(_pUser.getAsString(USER.cash));
+    	txtYourCash.setText(_botBar.getUser().getAsString(USER.cash));
     	txtGetBack.setText("0");
     	txtPlace.setText("0");
     	
@@ -596,7 +590,7 @@ public class MatchActivity extends Activity {
 					JSONObject objData = new JSONObject(szJson);
 					String szId 	  = objData.getString(BETTING.id); 					
 					
-					String szUserId = _pUser.getAsString(USER.id);
+					String szUserId = _botBar.getUser().getAsString(USER.id);
 					String szMatchId = _pMatch.getAsString(MATCH.id);
 					TextView txtPlace = (TextView)findViewById(R.id.txtPlace);
 					String szCash = txtPlace.getText().toString();
@@ -623,7 +617,7 @@ public class MatchActivity extends Activity {
 					onCloseClick(null);
 					
 					// Get Betting From Database
-					_pBetting = mdlBetting.getBettingByMatchId(_pUser.getAsString(USER.id), _pMatch.getAsString(MATCH.id));
+					_pBetting = mdlBetting.getBettingByMatchId(_botBar.getUser().getAsString(USER.id), _pMatch.getAsString(MATCH.id));
 					if (_nBetType == 0)
 						setMatchResultOdds();
 					else if (_nBetType == 1)
@@ -632,17 +626,12 @@ public class MatchActivity extends Activity {
 						setHandicapOdds();
 					
 					values = new ContentValues();
-					values.put(USER.cash, _pUser.getAsInteger(USER.cash) - Integer.parseInt(szCash));
+					values.put(USER.cash, _botBar.getUser().getAsInteger(USER.cash) - Integer.parseInt(szCash));
 					UserModel mdlUser = new UserModel(_context);
-					mdlUser.update(_pUser.getAsInteger(USER.id), values);
-					_pUser = mdlUser.getLastUser();
-					
-					Intent returnIntent = new Intent();
-					returnIntent.putExtra("update", "user"); 
-					setResult(RESULT_OK, returnIntent);
-					
-					BottomBar bar = new BottomBar(_context);
-					bar.updateBottomBar();
+					mdlUser.update(_botBar.getUser().getAsInteger(USER.id), values);
+					_botBar.updateUserData();
+					_botBar.updateBettingCount();
+					_botBar.updateBottomBar();
 				} catch (JSONException e) {
 				}					
 			}

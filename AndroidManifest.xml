@@ -35,8 +35,7 @@
         </activity>
         <activity
             android:name=".MatchActivity"
-            android:label="@string/title_activity_match" 
-            android:noHistory="true">
+            android:label="@string/title_activity_match">
         </activity>
         <activity
             android:name=".LoginActivity"

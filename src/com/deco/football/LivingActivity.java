@@ -25,8 +25,8 @@ public class LivingActivity extends Activity {
 
 	final Handler myHandler = new Handler();
 	MatchAdapter _adapter;
-	ContentValues _pUser = new ContentValues();
-	BottomBar _userBar = new BottomBar(this);
+
+	private BottomBar _botBar = new BottomBar(this);
 	
 	@Override 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +34,9 @@ public class LivingActivity extends Activity {
 		setContentView(R.layout.activity_living);
 		
 		// Get Current User
-		BottomBar bar = new BottomBar(this);
-		bar.updateBottomBar();
+		_botBar.updateUserData();
+		_botBar.updateBettingCount();
+		_botBar.updateBottomBar();
 		
 		// ListView Match
 		ArrayList<ContentValues> lsMatch = new ArrayList<ContentValues>();
@@ -69,6 +70,17 @@ public class LivingActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
+	@Override
+	protected void onResume() {
+	  _botBar.updateBottomBar();
+	  super.onResume();
+	}	
+	
+	@Override
+	protected void onPause() {
+	  super.onPause();
+	}	
+	
 	public void updateListView(){
 		MatchModel mdlMatch = new MatchModel(this);
 		
@@ -95,18 +107,6 @@ public class LivingActivity extends Activity {
 		_adapter.lsMatch = lsMatch;
 		_adapter.notifyDataSetChanged();
 	}	
-
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    if (requestCode == 1) {
-	        if(resultCode == RESULT_OK){
-	    		BottomBar bar = new BottomBar(this);
-	    		bar.updateBottomBar();
-	        } 
-	        if (resultCode == RESULT_CANCELED) {
-
-	        } 
-	    } 
-	} 
 	
 	class LivingMatchTimer extends TimerTask {
 		 public void run() {
