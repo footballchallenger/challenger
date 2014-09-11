@@ -62,16 +62,19 @@ public class MatchModel extends MySQL{
     	super.insert(TABLE_NAME, values);
     }
     
-    public int update(int nId, ContentValues values) {
-    	return super.update(TABLE_NAME, MATCH.id, nId, values);
+    public int update(String szId, ContentValues values) {
+    	return super.update(TABLE_NAME, MATCH.id, szId, values);
     }
     
     public Boolean checkExist(String match_id){
     	SQLiteDatabase db = this.getReadableDatabase();
     	String szQuery = String.format("SELECT %s FROM %s WHERE %s=%s", MATCH.id, TABLE_NAME, MATCH.id, match_id);
 	   	Cursor cursor = db.rawQuery(szQuery, null);  
-	   	if (cursor.getCount() == 0)
+	   	if (cursor.getCount() == 0){
+	   		cursor.close();
+		   	db.close();
 	   		return false;
+	   	}
 	   	
 	   	cursor.close();
 	   	db.close();

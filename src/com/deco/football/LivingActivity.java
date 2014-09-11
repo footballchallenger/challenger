@@ -8,9 +8,12 @@ import java.util.TimerTask;
 
 import com.deco.adapter.MatchAdapter;
 import com.deco.element.BottomBar;
+import com.deco.model.BettingModel;
 import com.deco.model.MatchModel;
+import com.deco.service.BettingService;
 import com.deco.service.MatchService;
 import com.deco.sql.MATCH;
+import com.deco.sql.USER;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -40,14 +43,14 @@ public class LivingActivity extends Activity {
 		_botBar.updateUserData();
 		_botBar.updateBettingCount();
 		_botBar.updateBottomBar();
-		
+			
 		// ListView Match 
 		ArrayList<ContentValues> lsMatch = new ArrayList<ContentValues>();
 		_adapter = new MatchAdapter(this, 0, lsMatch);
 		ListView listView = (ListView)findViewById(R.id.matchlist);
 		listView.setAdapter(_adapter); 
 		updateListView();
-        
+	        
         // Init Timer
 		if (_livingTimer == null){
 			_livingTimer = new Timer();
@@ -58,8 +61,19 @@ public class LivingActivity extends Activity {
 		if (_ComingTimer == null){
 			_ComingTimer = new Timer();		
 			ComingMatchTimer getComingMatchTimer = new ComingMatchTimer();
-			_ComingTimer.schedule(getComingMatchTimer, 2000, 60000);
+			_ComingTimer.schedule(getComingMatchTimer, 0, 60000);
 		}
+		
+		// Update Betting List
+		if (_botBar.getUser().size() > 0){
+			BettingService svBetting = new BettingService(this);
+			BettingWatcher wtcBetting = new BettingWatcher();
+			svBetting.addObserver(wtcBetting);
+			BettingModel mdlBetting = new BettingModel(this);
+			String szUserId = _botBar.getUser().getAsString(USER.id);
+			String szBettingId = mdlBetting.getLastBettingIdByUserId(szUserId);
+			svBetting.getBettingList(szUserId, szBettingId);
+		}		
 	}
 	
 	@Override
@@ -79,13 +93,13 @@ public class LivingActivity extends Activity {
 	
 	@Override
 	protected void onResume() {
-	  _botBar.updateBottomBar();
-	  super.onResume();
+		_botBar.updateBottomBar();
+		super.onResume();
 	}	
 	
 	@Override
 	protected void onPause() {
-	  super.onPause();
+		super.onPause();
 	}	
 	
 	public void updateListView(){
@@ -130,7 +144,7 @@ public class LivingActivity extends Activity {
 	final Runnable getLivingMatch = new Runnable() {
 	      public void run() {
 	    	  MatchService svMatch = new MatchService(getApplicationContext());
-	    	  LivingMatchWatcher wtcMatch = new LivingMatchWatcher();
+	    	  MatchWatcher wtcMatch = new MatchWatcher();
 	    	  svMatch.addObserver(wtcMatch);
 	    	  svMatch.getLivingMatch();		
 	      }
@@ -139,13 +153,13 @@ public class LivingActivity extends Activity {
 	final Runnable getComingMatch = new Runnable() {
 	      public void run() {
 	    	  MatchService svMatch = new MatchService(getApplicationContext());
-	    	  LivingMatchWatcher wtcMatch = new LivingMatchWatcher();
+	    	  MatchWatcher wtcMatch = new MatchWatcher();
 	    	  svMatch.addObserver(wtcMatch);
 	    	  svMatch.getComingMatch();		
 	      }
 	};		
 	
-	class LivingMatchWatcher implements Observer { 
+	class MatchWatcher implements Observer { 
 		public void update(Observable obj, Object arg) {
 			String data = (String)arg;
 			if (data == "d"){
@@ -153,5 +167,16 @@ public class LivingActivity extends Activity {
 				return;
 			}			
 		} 
-	}	
+	}
+	
+	class BettingWatcher implements Observer {
+		public void update(Observable obj, Object arg) {
+			ContentValues result =  (ContentValues)arg;
+			if (result.get("result")=="true"){
+				_botBar.updateBettingCount();
+				_botBar.updateBottomBar();				
+				return;
+			}			
+		} 		
+	}
 }

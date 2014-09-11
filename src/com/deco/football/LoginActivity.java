@@ -4,7 +4,10 @@ import java.util.Observable;
 import java.util.Observer;
 
 import com.deco.element.BottomBar;
+import com.deco.model.BettingModel;
+import com.deco.service.BettingService;
 import com.deco.service.UserService;
+import com.deco.sql.USER;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -60,6 +63,16 @@ public class LoginActivity extends Activity {
 			if (result.get("result")=="true"){
 				_botBar.updateUserData();
 				_botBar.updateBettingCount();
+				
+				// Update Betting List
+				if (_botBar.getUser().size() > 0){
+					BettingService svBetting = new BettingService(_context);
+					BettingModel mdlBetting = new BettingModel(_context);
+					String szUserId = _botBar.getUser().getAsString(USER.id);
+					String szBettingId = mdlBetting.getLastBettingIdByUserId(szUserId);
+					svBetting.getBettingList(szUserId, szBettingId);
+				}					
+				
 				finish();
 			}
 			else{

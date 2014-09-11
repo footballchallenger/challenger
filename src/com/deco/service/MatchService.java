@@ -33,29 +33,30 @@ public class MatchService extends Observable{
 	}
 	
 	public void getLivingMatch(){
-		get("http://footballchallenger.net/service.php?nav=match&info=live&zip=0");
+		get("http://footballchallenger.net/service.php?nav=match&info=live&zip=0", "1");
 	}
 
 	public void getComingMatch(){
-		get("http://footballchallenger.net/service.php?nav=match&info=coming");
+		get("http://footballchallenger.net/service.php?nav=match&info=coming", "0");
 	}	
 	
-	public void get(String URL){
-		new RequestTask().execute(URL);
+	public void get(String URL, String szLive){
+		String[] values = new String[] {URL, szLive};
+		new RequestTask().execute(values);
 	}
 	
 	class RequestTask extends AsyncTask<String, Integer, String>{
 		private boolean _bUpdate = false;
 		
 	    @Override
-	    protected String doInBackground(String... uri) {
+	    protected String doInBackground(String... params) {
 	    	_bUpdate = false;
 	    	
 	        HttpClient httpclient = new DefaultHttpClient();
 	        HttpResponse response;
 	        String responseString = null;
 	        try {
-	            response = httpclient.execute(new HttpGet(uri[0]));
+	            response = httpclient.execute(new HttpGet(params[0]));
 	            StatusLine statusLine = response.getStatusLine();
 	            if(statusLine.getStatusCode() == HttpStatus.SC_OK){
 	                ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -110,6 +111,11 @@ public class MatchService extends Observable{
 						values.put(MATCH.first_time, getObjValue(match,MATCH.first_time));
 						values.put(MATCH.second_time, getObjValue(match, MATCH.second_time));
 						values.put(MATCH.status, getObjValue(match, MATCH.status));
+						if (Integer.parseInt(params[1]) == 0){
+							values.put(MATCH.handicap, getObjValue(match, MATCH.handicap));
+							values.put(MATCH.home_back, getObjValue(match, MATCH.home_back));
+							values.put(MATCH.away_back, getObjValue(match, MATCH.away_back));
+						}
 						mdlMatch.insert(values);
 						_bUpdate = true;
 					}
@@ -143,7 +149,7 @@ public class MatchService extends Observable{
 						} 
 						
 						if (values.size() > 0){
-							mdlMatch.update(Integer.parseInt(match_id), values);
+							mdlMatch.update(match_id, values);
 							_bUpdate = true;
 						}
 					}

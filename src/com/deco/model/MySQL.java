@@ -35,13 +35,13 @@ public class MySQL extends SQLiteOpenHelper{
        	db.close();
     }  
     
-    public int update(String szTableId, String szKeyName, int nKeyId, ContentValues values) {
+    public int update(String szTableId, String szKeyName, String szKeyId, ContentValues values) {
     	if (values.size() == 0)
     		return 0;   
     	
 	    SQLiteDatabase db = this.getWritableDatabase();
 	    int nRet = db.update(szTableId, values, szKeyName + " = ?",
-	            new String[] { String.valueOf(nKeyId) });
+	            new String[] { szKeyId });
 	    
 	    db.close();
 	    return nRet;

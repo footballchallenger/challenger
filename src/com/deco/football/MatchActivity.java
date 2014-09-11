@@ -628,7 +628,7 @@ public class MatchActivity extends Activity {
 					values = new ContentValues();
 					values.put(USER.cash, _botBar.getUser().getAsInteger(USER.cash) - Integer.parseInt(szCash));
 					UserModel mdlUser = new UserModel(_context);
-					mdlUser.update(_botBar.getUser().getAsInteger(USER.id), values);
+					mdlUser.update(_botBar.getUser().getAsString(USER.id), values);
 					_botBar.updateUserData();
 					_botBar.updateBettingCount();
 					_botBar.updateBottomBar();

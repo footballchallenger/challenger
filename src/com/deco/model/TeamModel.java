@@ -68,8 +68,8 @@ public class TeamModel extends MySQL{
     	super.insert(TABLE_NAME, values);
     }
     
-    public int update(int nId, ContentValues values) {
-    	return super.update(TABLE_NAME, KEY_ID, nId, values);
+    public int update(String szId, ContentValues values) {
+    	return super.update(TABLE_NAME, KEY_ID, szId, values);
     }  
     
     public ContentValues getTeamById(String szId, ArrayList<String> lsSelect){

@@ -117,12 +117,12 @@ public class UserService extends Observable{
 				
 				UserModel mdlUser = new UserModel(_context);
 				//mdlUser.upgrade();
-				String tmp = mdlUser.getUserById(szId);
-				if (tmp == ""){
+				String szUserId = mdlUser.getUserById(szId);
+				if (szUserId == ""){
 					mdlUser.insert(values);
 				}
 				else{
-					mdlUser.update(Integer.parseInt(tmp), values);
+					mdlUser.update(szUserId, values);
 				}				
 				
 	 

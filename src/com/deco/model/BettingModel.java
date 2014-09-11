@@ -2,7 +2,6 @@ package com.deco.model;
 
 import java.lang.String;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import com.deco.sql.BETTING;
 import com.deco.sql.USER;
@@ -51,7 +50,7 @@ public class BettingModel extends MySQL{
 				  "`betting_cash` int(11) NOT NULL," +
 				  "`betting_get` int(11) NOT NULL," +
 				  "`betting_status` int(11) DEFAULT NULL," +
-				  "`betting_time` varchar(32) DEFAULT NULL," +
+				  "`betting_time` timestamp NULL DEFAULT '0000-00-00 00:00:00'," +
 				  "PRIMARY KEY (`betting_id`)" +
 				")";
 	   	db.execSQL(szQuery);
@@ -69,8 +68,58 @@ public class BettingModel extends MySQL{
     	super.insert(TABLE_NAME, values);
     }
     
-    public int update(int nId, ContentValues values) {
-    	return super.update(TABLE_NAME, KEY_ID, nId, values);
+    public int update(String szId, ContentValues values) {
+    	return super.update(TABLE_NAME, KEY_ID, szId, values);
+    }
+    
+    public Boolean checkBettingExist(String szBettingId){
+    	try {
+        	SQLiteDatabase db = this.getReadableDatabase();
+        	String szQuery = String.format("SELECT %s FROM %s WHERE %s=%s", BETTING.id, TABLE_NAME, BETTING.id, szBettingId);
+    	   	Cursor cursor = db.rawQuery(szQuery, null);  
+    	   
+    	   	if (cursor.getCount() == 0){
+    	   		cursor.close();
+    		   	db.close();
+    	   		return false;
+    	   	}
+    	   	
+        	cursor.close();
+        	db.close();
+	        return true;
+	    } catch (SQLException e) {
+	    	upgrade();
+	    	return false;
+	    }    	
+    }
+    
+    public String getLastBettingIdByUserId(String szUserId){
+    	try {
+        	SQLiteDatabase db = this.getReadableDatabase();
+        	String szQuery = String.format
+        			("SELECT %s FROM %s WHERE %s=%s ORDER BY %s DESC LIMIT 1", 
+        			BETTING.id, 
+        			TABLE_NAME, 
+        			USER.id, 
+        			szUserId,
+        			BETTING.id);
+    	   	
+        	Cursor cursor = db.rawQuery(szQuery, null);
+    	   
+    	   	if (cursor.moveToFirst()) {
+    	   		String szBettingId = cursor.getString(0);
+            	cursor.close();
+            	db.close();
+            	return szBettingId;
+    	   	}
+    	   	
+        	cursor.close();
+        	db.close();
+	        return "0";
+	    } catch (SQLException e) {
+	    	upgrade();
+	    	return "0";
+	    } 
     }
     
     public ArrayList<ContentValues> getBettingByUserId(String szUserId){
@@ -126,10 +175,11 @@ public class BettingModel extends MySQL{
     		
         	SQLiteDatabase db = this.getReadableDatabase();
         	String szSelect = TextUtils.join(",", lsSelect);
-        	String szQuery = String.format("SELECT %s FROM %s WHERE %s=%s AND %s=%s", 
+        	String szQuery = String.format("SELECT %s FROM %s WHERE %s=%s AND %s=%s AND %s=0", 
         			szSelect, TABLE_NAME, 
         			USER.id, szUserId,
-        			BETTING.match_id, szMatchId);
+        			BETTING.match_id, szMatchId,
+        			BETTING.status);
     	   	Cursor cursor = db.rawQuery(szQuery, null);  
     	   
     	   	if (cursor.moveToFirst()) {
@@ -167,16 +217,17 @@ public class BettingModel extends MySQL{
     		
         	SQLiteDatabase db = this.getReadableDatabase();
         	String szSelect = TextUtils.join(",", lsSelect);
-        	String szQuery = String.format("SELECT %s FROM %s WHERE %=%", szSelect, TABLE_NAME, BETTING.id, szId);
+        	String szQuery = String.format("SELECT %s FROM %s WHERE %s=%s", szSelect, TABLE_NAME, BETTING.id, szId);
     	   	Cursor cursor = db.rawQuery(szQuery, null);  
     	   
     	   	if (cursor.moveToFirst()){
             	for (int i=0; i<lsSelect.size(); i++){
             		pBettingData.put(lsSelect.get(i), cursor.getString(i));
             	}
-            	cursor.close();
-            	db.close();
     	   	}
+    	   	
+        	cursor.close();
+        	db.close();    	   	
 	        
 	        return pBettingData;
 	    } catch (SQLException e) {
@@ -188,7 +239,7 @@ public class BettingModel extends MySQL{
     public int getBettingCount(String szUserId){
     	try {
         	SQLiteDatabase db = this.getReadableDatabase();
-        	String szQuery = String.format("SELECT COUNT(%s) FROM %s WHERE %s=%s", BETTING.id, TABLE_NAME, USER.id, szUserId);
+        	String szQuery = String.format("SELECT COUNT(%s) FROM %s WHERE %s=%s AND %s=0", BETTING.id, TABLE_NAME, USER.id, szUserId, BETTING.status);
     	   	Cursor cursor = db.rawQuery(szQuery, null);  
     	   
     	   	if (cursor.moveToFirst()){
