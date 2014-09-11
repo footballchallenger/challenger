@@ -1,5 +1,6 @@
 package com.deco.element;
 
+import com.deco.football.BettingActivity;
 import com.deco.football.LivingActivity;
 import com.deco.football.LoginActivity;
 import com.deco.football.R;
@@ -67,10 +68,8 @@ public class BottomBar implements  View.OnClickListener{
 			ac.startActivityForResult(intent, 1);
 		}
 		else if (v.getId() == R.id.btnShowBetting){
-			ViewGroup panel = (ViewGroup)activity.findViewById(R.id.userprofile);
-	    	panel.setVisibility(View.VISIBLE);
-	    	Animation slide = AnimationUtils.loadAnimation(_context, R.anim.slide_up);
-	    	panel.startAnimation(slide); 			
+			Intent intent = new Intent(_context, BettingActivity.class);
+			_context.startActivity(intent);
 		}
 	}      
 	
