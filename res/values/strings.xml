@@ -12,5 +12,6 @@
     <string name="title_activity_match">MatchActivity</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_signup">SignupActivity</string>
+    <string name="title_activity_betting">BettingActivity</string>
 
 </resources>

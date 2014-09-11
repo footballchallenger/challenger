@@ -31,11 +31,13 @@
         </activity>
         <activity
             android:name=".LivingActivity"
+            android:configChanges="screenSize"
             android:label="Match Info" >
         </activity>
         <activity
             android:name=".MatchActivity"
-            android:label="@string/title_activity_match">
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/title_activity_match" >
         </activity>
         <activity
             android:name=".LoginActivity"
@@ -45,11 +47,15 @@
             android:name=".SignupActivity"
             android:label="@string/title_activity_signup" >
         </activity>
+        <activity
+            android:name=".BettingActivity"
+            android:label="@string/title_activity_betting" >
+        </activity>
     </application>
 
     <!--
      To retrieve OAuth 2.0 tokens or invalidate tokens to disconnect a user. This disconnect
-     option is required to comply with the Google+ Sign-In developer policies
+     option is required to comply with the Google+ Sign-In developer policies
     -->
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 

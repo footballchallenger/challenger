@@ -14,7 +14,6 @@ import com.deco.sql.MATCH;
 
 import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
@@ -28,6 +27,10 @@ public class LivingActivity extends Activity {
 
 	private BottomBar _botBar = new BottomBar(this);
 	
+	// Timer
+	private static Timer _livingTimer;
+	private static Timer _ComingTimer;
+	
 	@Override 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -38,7 +41,7 @@ public class LivingActivity extends Activity {
 		_botBar.updateBettingCount();
 		_botBar.updateBottomBar();
 		
-		// ListView Match
+		// ListView Match 
 		ArrayList<ContentValues> lsMatch = new ArrayList<ContentValues>();
 		_adapter = new MatchAdapter(this, 0, lsMatch);
 		ListView listView = (ListView)findViewById(R.id.matchlist);
@@ -46,13 +49,17 @@ public class LivingActivity extends Activity {
 		updateListView();
         
         // Init Timer
-		Timer myTimer = new Timer();
-		LivingMatchTimer getLivingMatchTimer = new LivingMatchTimer();
-		myTimer.schedule(getLivingMatchTimer, 0, 10000);
-		
-		myTimer = new Timer();
-		ComingMatchTimer getComingMatchTimer = new ComingMatchTimer();
-		myTimer.schedule(getComingMatchTimer, 2000, 60000);		
+		if (_livingTimer == null){
+			_livingTimer = new Timer();
+			LivingMatchTimer getLivingMatchTimer = new LivingMatchTimer();
+			_livingTimer.schedule(getLivingMatchTimer, 0, 10000);
+		}
+
+		if (_ComingTimer == null){
+			_ComingTimer = new Timer();		
+			ComingMatchTimer getComingMatchTimer = new ComingMatchTimer();
+			_ComingTimer.schedule(getComingMatchTimer, 2000, 60000);
+		}
 	}
 	
 	@Override

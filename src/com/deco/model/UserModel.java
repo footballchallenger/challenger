@@ -2,10 +2,8 @@ package com.deco.model;
 
 import java.lang.String;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import com.deco.sql.USER;
-
 
 import android.content.ContentValues;
 import android.content.Context;

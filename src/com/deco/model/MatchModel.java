@@ -2,11 +2,9 @@ package com.deco.model;
 
 import java.lang.String;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import com.deco.sql.LEAGUE;
 import com.deco.sql.MATCH;
-import com.deco.sql.TEAM;
 
 import android.content.ContentValues;
 import android.content.Context;
