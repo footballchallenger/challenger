@@ -11,6 +11,10 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+
+import com.deco.config.SERVER;
+
+import android.content.ContentValues;
 import android.content.Context;
 import android.os.AsyncTask;
 
@@ -18,12 +22,9 @@ import android.os.AsyncTask;
 
 public class ConfigService extends Observable{
 
-	private static Context _context;
-	private String _CONFIG_URL = "http://footballchallenger.net/service.php?nav=config&ver=";
+	private String _CONFIG_URL = SERVER.SERVICE_URL + "nav=config&ver=";
 	
 	public ConfigService(Context context) {
-		if (context != null)
-			_context = context;
 	}
 	
 	public void getConfig(int nVer){
@@ -34,14 +35,17 @@ public class ConfigService extends Observable{
 		new RequestTask().execute(URL);
 	}
 	
-	class RequestTask extends AsyncTask<String, Integer, String>{
+	class RequestTask extends AsyncTask<String, Integer, ContentValues>{
 	    @Override
-	    protected String doInBackground(String... uri) {
+	    protected ContentValues doInBackground(String... params) {
+	    	ContentValues result = new ContentValues();
+	    	result.put("result", "false");	    	
+	    	
 	        HttpClient httpclient = new DefaultHttpClient();
 	        HttpResponse response;
 	        String responseString = null;
 	        try {
-	            response = httpclient.execute(new HttpGet(uri[0]));
+	            response = httpclient.execute(new HttpGet(params[0]));
 	            StatusLine statusLine = response.getStatusLine();
 	            if(statusLine.getStatusCode() == HttpStatus.SC_OK){
 	                ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -53,22 +57,19 @@ public class ConfigService extends Observable{
 	                throw new IOException(statusLine.getReasonPhrase());
 	            }
 	        } catch (ClientProtocolException e) {
-	        	return "fail";
+	        	return result;
 	        } 
 	        catch (IOException e) {
-	        	return "fail";
+	        	return result;
 	        }
 	        
-	        return responseString;
+	        result.put("result", "true");
+	        result.put("data", responseString);
+	        return result;
 	    }
 	    
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-        }	    
-	    
 	    @Override
-	    protected void onPostExecute(String result) {
+	    protected void onPostExecute(ContentValues result) {
 	        super.onPostExecute(result);
 			setChanged();
 			notifyObservers(result);

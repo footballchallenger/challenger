@@ -7,6 +7,7 @@ import com.deco.service.ConfigService;
 import com.deco.service.LeagueService;
 import com.deco.service.TeamService;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -65,34 +66,35 @@ public class InitActivity extends Activity {
 	class ConfigWatcher implements Observer { 
 		public void update(Observable obj, Object arg) {
 			try {	        	
-				JSONObject objConfig = new JSONObject((String)arg);
-				String szVersion = objConfig.getString("version");
-				ConfigModel mdlConfig = new ConfigModel(_context);
-				mdlConfig.updateVersion(szVersion);
-				
-			    try
-			    {
-					objConfig.getString("league");
-					LeagueService svLeague = new LeagueService(_context);
-					LeagueWatcher leaguecatch = new LeagueWatcher(); 
-					svLeague.addObserver(leaguecatch);
-					svLeague.getAllLeague();
-			    }
-			    catch (JSONException e){
-			    	myHandler.post(myRunnable);
-			    }
-			    
-			    try
-			    {
-					objConfig.getString("team");
-					TeamService svTeam = new TeamService(_context);
-					TeamWatcher teamcatch = new TeamWatcher(); 
-					svTeam.addObserver(teamcatch); 
-					svTeam.getAllTeam();		
-			    }
-			    catch (JSONException e){
-			    	myHandler.post(myRunnable);
-			    } 	
+				ContentValues result = (ContentValues)arg;
+				if (result.get("result").equals("true")){
+					JSONObject objConfig = new JSONObject(result.getAsString("data"));
+					String szVersion = objConfig.getString("version");
+					ConfigModel mdlConfig = new ConfigModel(_context);
+					mdlConfig.updateVersion(szVersion);
+					
+				    try{
+						objConfig.getString("league");
+						LeagueService svLeague = new LeagueService(_context);
+						LeagueWatcher leaguecatch = new LeagueWatcher(); 
+						svLeague.addObserver(leaguecatch);
+						svLeague.getAllLeague();
+				    }
+				    catch (JSONException e){
+				    	myHandler.post(myRunnable);
+				    }
+				    
+				    try{
+						objConfig.getString("team");
+						TeamService svTeam = new TeamService(_context);
+						TeamWatcher teamcatch = new TeamWatcher(); 
+						svTeam.addObserver(teamcatch); 
+						svTeam.getAllTeam();		
+				    }
+				    catch (JSONException e){
+				    	myHandler.post(myRunnable);
+				    } 	
+				}
 			    
 			} catch (JSONException e) {
 			}				

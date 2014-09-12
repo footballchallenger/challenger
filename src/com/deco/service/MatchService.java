@@ -14,6 +14,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import com.deco.config.SERVER;
 import com.deco.model.MatchModel;
 import com.deco.sql.MATCH;
 
@@ -33,11 +35,13 @@ public class MatchService extends Observable{
 	}
 	
 	public void getLivingMatch(){
-		get("http://footballchallenger.net/service.php?nav=match&info=live&zip=0", "1");
+		String szServiceUrl = SERVER.SERVICE_URL + "nav=match&info=live&zip=0";
+		get(szServiceUrl, "1");
 	}
 
 	public void getComingMatch(){
-		get("http://footballchallenger.net/service.php?nav=match&info=coming", "0");
+		String szServiceUrl = SERVER.SERVICE_URL + "nav=match&info=coming";
+		get(szServiceUrl, "0");
 	}	
 	
 	public void get(String URL, String szLive){
@@ -45,11 +49,14 @@ public class MatchService extends Observable{
 		new RequestTask().execute(values);
 	}
 	
-	class RequestTask extends AsyncTask<String, Integer, String>{
+	class RequestTask extends AsyncTask<String, Integer, ContentValues>{
 		private boolean _bUpdate = false;
 		
 	    @Override
-	    protected String doInBackground(String... params) {
+	    protected ContentValues doInBackground(String... params) {
+	    	ContentValues result = new ContentValues();
+	    	result.put("result", "false");	    	
+	    	
 	    	_bUpdate = false;
 	    	
 	        HttpClient httpclient = new DefaultHttpClient();
@@ -68,10 +75,10 @@ public class MatchService extends Observable{
 	                throw new IOException(statusLine.getReasonPhrase());
 	            }
 	        } catch (ClientProtocolException e) {
-	        	return "";
+	        	return result;
 	        } 
 	        catch (IOException e) {
-	        	return "";
+	        	return result;
 	        }
 	        
 			try {	        
@@ -155,10 +162,11 @@ public class MatchService extends Observable{
 					}
 				}	 
 			} catch (JSONException e) {
-				return "";
+				return result;
 			}	        	
 	        
-	        return responseString;
+			result.put("result", "true");
+	        return result;
 	    }
 	    
 	    @Override
@@ -167,11 +175,11 @@ public class MatchService extends Observable{
 	    }	    
 	    
 	    @Override
-	    protected void onPostExecute(String result) {
+	    protected void onPostExecute(ContentValues result) {
 	        super.onPostExecute(result);
 	        if (_bUpdate){
 	        	setChanged();
-				notifyObservers("d");
+				notifyObservers(result);
 	        }
 	    }
 	    

@@ -161,11 +161,9 @@ public class LivingActivity extends Activity {
 	
 	class MatchWatcher implements Observer { 
 		public void update(Observable obj, Object arg) {
-			String data = (String)arg;
-			if (data == "d"){
+			ContentValues result =  (ContentValues)arg;
+			if (result.get("result")=="true")
 				updateListView();
-				return;
-			}			
 		} 
 	}
 	
@@ -175,7 +173,6 @@ public class LivingActivity extends Activity {
 			if (result.get("result")=="true"){
 				_botBar.updateBettingCount();
 				_botBar.updateBottomBar();				
-				return;
 			}			
 		} 		
 	}
