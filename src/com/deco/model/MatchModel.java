@@ -3,6 +3,7 @@ package com.deco.model;
 import java.lang.String;
 import java.util.ArrayList;
 
+import com.deco.sql.BETTING;
 import com.deco.sql.LEAGUE;
 import com.deco.sql.MATCH;
 
@@ -203,5 +204,48 @@ public class MatchModel extends MySQL{
     	
         db.close();
     	return lsLivingMatch;
-    }    
+    }  
+    
+    public ArrayList<ContentValues> getBettingList(String szUserId){
+    	ArrayList<ContentValues> lsBetting = new ArrayList<ContentValues>();
+    	SQLiteDatabase db = this.getReadableDatabase();
+    	
+    	String szView = String.format(
+    			"SELECT `match`.*,`betting`.*,team_name as team_home_name from `match`, `team`, `betting` " +
+    			"WHERE team_home_id = team_id AND `betting`.match_id = `match`.match_id AND `betting`.user_id=%s " +
+    			"GROUP BY `betting`.betting_id " + 
+    			"ORDER BY match_first_time DESC, `match`.match_id DESC LIMIT 60", szUserId);
+    	String szQuery = String.format(
+    			"SELECT " +
+    			"betting_id, odds_title, betting_cash, betting_get, betting_status, " +
+    			"match_id, match_home_goals, match_away_goals, match_first_time, match_status, " +
+    			"team_home_name,team_name as team_away_name " +
+    			"FROM `team`,(%s) AS match_view " +
+    			"WHERE team_away_id=team_id ", szView);
+    	
+	   	Cursor cursor = db.rawQuery(szQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+            	ContentValues item = new ContentValues();
+            	int i = 0;
+            	item.put(BETTING.id, cursor.getString(i++));
+            	item.put(BETTING.odds_title, cursor.getString(i++));
+            	item.put(BETTING.cash, cursor.getString(i++));
+            	item.put(BETTING.get, cursor.getString(i++));
+            	item.put(BETTING.status, cursor.getString(i++));
+            	item.put(MATCH.id, cursor.getString(i++));
+            	item.put(MATCH.home_goals, cursor.getString(i++));
+            	item.put(MATCH.away_goals, cursor.getString(i++));
+            	item.put(MATCH.first_time, cursor.getString(i++));
+            	item.put(MATCH.status, cursor.getString(i++));
+            	item.put(MATCH.home_name, cursor.getString(i++));
+            	item.put(MATCH.away_name, cursor.getString(i++));
+            	lsBetting.add(item);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }	   	
+    	
+        db.close();
+    	return lsBetting;
+    }   
 }

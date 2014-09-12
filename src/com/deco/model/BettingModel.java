@@ -122,43 +122,6 @@ public class BettingModel extends MySQL{
 	    } 
     }
     
-    public ArrayList<ContentValues> getBettingByUserId(String szUserId){
-    	ArrayList<ContentValues> lsBettingData = new ArrayList<ContentValues>();
-
-    	try {
-    		ArrayList<String> lsSelect = new ArrayList<String>();
-    		lsSelect.add(BETTING.id);
-    		lsSelect.add(BETTING.user_id);
-    		lsSelect.add(BETTING.match_id);
-    		lsSelect.add(BETTING.odds_title);
-    		lsSelect.add(BETTING.cash);
-    		lsSelect.add(BETTING.get);
-    		lsSelect.add(BETTING.status);
-    		lsSelect.add(BETTING.time);  		
-    		
-        	SQLiteDatabase db = this.getReadableDatabase();
-        	String szSelect = TextUtils.join(",", lsSelect);
-        	String szQuery = String.format("SELECT %s FROM %s WHERE %s=%s", szSelect, TABLE_NAME, BETTING.user_id, szUserId);
-    	   	Cursor cursor = db.rawQuery(szQuery, null);  
-    	   
-            do {
-            	ContentValues item = new ContentValues();
-               	for (int i=0; i<lsSelect.size(); i++){
-               		item.put(lsSelect.get(i), cursor.getString(i));
-            	}
-               	lsBettingData.add(item);
-            } while (cursor.moveToNext());
-	        
-            cursor.close();
-            db.close();
-            
-	        return lsBettingData;
-	    } catch (SQLException e) {
-	    	upgrade();
-	    }
-    	return lsBettingData;
-    }       
-    
     public ArrayList<ContentValues> getBettingByMatchId(String szUserId, String szMatchId){
     	ArrayList<ContentValues> lsBettingData = new ArrayList<ContentValues>();
 
